@@ -1,89 +1,85 @@
-# STEP 1: Import the necessary modules.
 import mediapipe as mp
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
-
-# STEP 2: Create an HandLandmarker object.
-base_options = python.BaseOptions(model_asset_path='hand_landmarker.task')
-options = vision.HandLandmarkerOptions(base_options=base_options,
-                                       num_hands=2)
-detector = vision.HandLandmarker.create_from_options(options)
-
-# STEP 3: Load the input image.
-image = mp.Image.create_from_file("image.jpg")
-
-# STEP 4: Detect hand landmarks from the input image.
-detection_result = detector.detect(image)
-
-# STEP 5: Process the classification result. In this case, visualize it.
-annotated_image = draw_landmarks_on_image(image.numpy_view(), detection_result)
-cv2_imshow(cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
+import numpy as np
+import json
+import os
+import re
 
 
 
+model_path = './models/hand_landmarker.task'
 
+BaseOptions = mp.tasks.BaseOptions
+HandLandmarker = mp.tasks.vision.HandLandmarker
+HandLandmarkerOptions = mp.tasks.vision.HandLandmarkerOptions
+VisionRunningMode = mp.tasks.vision.RunningMode
 
-
-
-# import mediapipe as mp
-# from mediapipe.tasks import python
-# from mediapipe.tasks.python import vision
-# import numpy as np
-# import cv2
-# import os
-
-
-# model_path = './models/hand_landmarker.task'
-
-# BaseOptions = mp.tasks.BaseOptions
-# HandLandmarker = mp.tasks.vision.HandLandmarker
-# HandLandmarkerOptions = mp.tasks.vision.HandLandmarkerOptions
-# VisionRunningMode = mp.tasks.vision.RunningMode
-
-# options = HandLandmarkerOptions(
-#     base_options = BaseOptions(model_asset_path=model_path),
-#     running_mode=VisionRunningMode.IMAGE
+options = HandLandmarkerOptions(
+    base_options = BaseOptions(model_asset_path=model_path),
+    running_mode=VisionRunningMode.IMAGE
     
-# )
+)
 
-# with HandLandmarker.create_from_options(options) as landmarker:
-#     mp_image = cv2.imread('../ChicagoFSWild/youtube_2/alex_abenchuchan_3297.jpg')
-#     image_rgb = cv2.cvtColor(mp_image,  cv2.COLOR_BGR2RGB)
-#     hand_landmarker_result = landmarker.process(image_rgb)
+with HandLandmarker.create_from_options(options) as landmarker:
+        mp_image = mp.Image.create_from_file('../ChicagoFSWild/deafvideo_3/deaf_power_rob_3089/0002.jpg')
+        hand_landmarker_result = landmarker.detect(mp_image)
+        
+        print(hand_landmarker_result)
+        
+        # stringified_result = str(hand_landmarker_result)
+        
+        # result_pattern = r'NormalizedLandmark\((.*?)\)'
+        
+        # matches = re.findall(stringified_result,result_pattern)
+        
+        # landmark_list = []
+        
+        # for match in matches:
+            
+        #     landmark_dict = {}
+            
+        #     for pair in match.split(', '):
+        #         key, value = pair.split('=')
+        #         landmark_dict[key] = float(value)
+        #     landmark_list.append(landmark_dict)
+            
+        # json_data = json.dumps(landmark_list, indent=4)
+        
+        # print(json_data)
+
+        
+        
+        
+       
+        
+        
+        # with open('sample.json', "w", encoding='utf8') as json_file:
+        #     for lm_num, lm_val in enumerate(results_dict['hand_world_landmarks'][0][:]):
+                
+        #         replacements = {"(":"{", ")" : "}", "=" : ":", "x": "'x", "y": "'y", "z": "'z", ":": "':"}
+                
+        #         landmark_coor = (str(lm_num  + 1) + "_" + str(lm_val))
+                
+        
+        #         for prev, new in replacements.items():
+        #             landmark_coor = landmark_coor.replace(prev, new)
+                
+            
+                
+            
+        #         json.dump(landmark_coor, json_file)
+            
+       
+        
+# with open("sample.json", "w") as outfile:  
+#     json.dumps(hand_landmarker_result)
+        
     
-#     if hand_landmarker_result.multi_hand_landmarks:
-#         for hand_landmarks in hand_landmarker_result:
-#             print("Hand landmarks detected:")
-#             for idx, landmark in enumerate(hand_landmarks.landmark):
-#                 x = landmark.x
-#                 y = landmark.y
-#                 z = landmark.z
-#                 print(f"Landmark {idx}: x={x}, y={y}, z={z}")
-#             mp.solutions.drawing_utils.draw_landmarks(mp_image , hand_landmarks, mp.solutions.hands.HAND_CONNECTIONS)
     
-#     cv2.imshow('Hand Landmarks', mp_image)
-#     cv2.waitKey(0)
-#     cv2.destroyAllWindows()
+   
 
 
-
-
-
-# mp_solutions = mp.solutions.drawing_utils
-
-# base_options = python.BaseOptions(model_asset_path='./models/hand_landmarker.task')
-
-# options = vision.HandLandmarkerOptions(base_options=base_options, num_hands = 1)
-
-# detector = vision.HandLandmarker.create_from_options(options)
-
-# image  = mp.Image.create_from_file('../ChicagoFSWild/youtube_2/alex_abenchuchan_3297/0002.jpg')
-
-# detection_result = detector.detect(image)
-
-# annotated_image = draw_landmarks_on_image(image.numpy_view(), detection_result)
-
-# cv2.imshow(cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
 
 
 
