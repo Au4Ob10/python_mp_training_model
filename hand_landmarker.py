@@ -20,12 +20,16 @@ options = HandLandmarkerOptions(
     running_mode=VisionRunningMode.IMAGE
     
 )
-
+ 
 with HandLandmarker.create_from_options(options) as landmarker:
         mp_image = mp.Image.create_from_file('../ChicagoFSWild/deafvideo_3/deaf_power_rob_3089/0002.jpg')
         hand_landmarker_result = landmarker.detect(mp_image)
-        
+
+
         print(hand_landmarker_result)
+               
+        
+        # print(hand_landmarker_result)
         
         # stringified_result = str(hand_landmarker_result)
         
